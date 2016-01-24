@@ -1,30 +1,71 @@
-<h3>Mes Catégories</h3>
-<ul class="nav nav-tabs" >
-	<li class="active"><a href="#">All</a></li>
-	<li ng-repeat="category in categories"><a href="#">{{category.name}}</a></li>
-</ul>
-<div class="form-group" style="float:right;">
-	<label for "searchbox">Rechercher </label>
-	<input type="search" ng-model="s" placeholder="Chercher" id="searchbox" style="margin-bottom: 20px;" />
+<decorate-category></decorate-category>
+<div class="pull-right">
+<input type="text" class="form-control" ng-model="search" placeholder="Chercher" id="searchbox" />
 </div>
+<div>
 <table class="table">
 	<thead>
 		<tr>
 			<th>#</th>
-			<th><a href="" ng-click="order(title)" style="text-decoration: none;">Titre</a></th>
-			<span class="sortorder" ng-show="predicate === 'title'" ng-class="{reverse:reverse}"></span>
-			<th><a href="" ng-click="order(name)" style="text-decoration: none;">Nom</a></th>
-			<span class="sortorder" ng-show="predicate === 'name'" ng-class="{reverse:reverse}"></span>
-			<th><a href="" ng-click="predicate === 'filterName(item, categories)'" style="text-decoration: none;">Catégorie</a></th>
-			<span ng-show="predicate === 'filterName(item, categories)'" ng-class="{reverse:reverse}"></span>
+			<th><a href="" style="text-decoration: none;">Titre</a></th>
+			<th><a href="" style="text-decoration: none;">Nom</a></th>
+			<th><a href="" style="text-decoration: none;">Catégorie</a></th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="item in items | orderBy:predicate:reverse | filter:s as results">
+		<tr ng-repeat="item in items | filter:search | filter:filters | orderBy:orderBy | pagination: currentPage * maxPage | limitTo: maxPage track by item.$id">
 			<td>{{$index+1}}</td>
-			<td>{{item.title}}</td>
-			<td>{{item.name}}</td>
-			<td>{{filterName(item, categories)}}</td>
+			<td><input type="text" ng-model="item.title" value="{{::item.title | lowercase}}" 
+			ng-disabled="editDisabled" class="form-control inputText" id="itemTitle"/></td>
+			<td><input type="text" ng-model="item.name" value="{{::item.name | lowercase}}" 
+			ng-disabled="editDisabled" class="form-control inputText" id="itemName"/></td>
+			<td><select id="itemCategory" class="form-control" ng-model="item.category_id" ng-options="category.catId as category.name for category in categories" ng-disabled="editDisabled">
+				</select></td>
+			<td>
+				<div ng-hide="editorEnabled" class="row editItem">
+					<editing-item></editing-item>
+				</div>	
+				<div ng-show="editorEnabled" class="row editItem">
+					<edit-item></edit-item>
+				</div>
+			</td>
 		</tr>
+		<div>
+			<tr ng-hide="checked">
+				<td></td>
+				<td><button type="button" class="btn btn-primary editSpace" ng-click="checked = !checked">New Item</button>
+					</td>
+				<td></td>
+				<td>
+
+				</td>
+				<td></td>
+			</tr>
+			<tr ng-show="checked">
+				<form class="form-inline">
+					<td></td>
+					<td><input class="form-control editSpace" ng-model="item.title" type="text" name="title"/></td>
+					<td><input class="form-control editSpace" ng-autocomplete ng-model="item.name" type="text" name="name" /></td>
+					<td><select class="form-control editSpace" ng-model="item.category_id" ng-options="category.catId as category.name for category in categories">
+						</select>
+					</td>
+					<td>
+						<div class="row createItem">
+							<div class="col-xs-6">
+								<a href="" ng-click="createItem(item); checked = !checked"><span class="glyphicon glyphicon-ok"></span></a>
+							</div>
+							<div class="col-xs-6" style="margin-left: -33px">
+								<a href="" ng-click="checked = !checked" >
+								<span class='glyphicon glyphicon-remove'>
+								</a>
+							</div>
+						</div>
+					</td>
+				</form>
+			</tr>
+		</div>
 	</tbody>
 </table>
+<decorate-pagination></decorate-pagination>
+</div>

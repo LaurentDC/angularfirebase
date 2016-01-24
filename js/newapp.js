@@ -1,3 +1,3 @@
 'use strict';
 
-var newapp = angular.module('collectify', ['ngRoute']);
+var newapp = angular.module('collectify', ['ngRoute', 'firebase']);

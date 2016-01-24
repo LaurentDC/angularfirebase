@@ -1,1 +1,26 @@
-<li><a href="#">{{category.name}}</a></li>
+<div ng-controller="categoryList">
+	<ul class="nav nav-pills" >
+		<li ng-class="{'active':all == states.activeCategory}"><a href="" ng-click="applyFilters(''); states.activeCategory=all">All</a></li>
+		<li ng-class="{'active':category.catId == states.activeCategory}" ng-repeat="category in categories" ><a href="" ng-click="applyFilters(category.catId); states.activeCategory=category.catId" class="inputText">{{::category.name}}</a></li>
+		<li ng-hide="editCategory">
+			<a href="" ng-click="editCategory = !editCategory">+</a>
+		</li>
+		<li ng-show="editCategory">	
+			<div>			
+			<div class="categoryEdit">
+				<form class="form-inline">
+					<input type="text" class="form-control" id="categoryName" value="categoryName" ng-model="category.name" name="name" />
+					<a href="" ng-click="createCategory(category); editCategory = !editCategory" id="submit-btn" >
+						<span class='glyphicon glyphicon-ok'>
+					</a>
+				</form>
+			</div>
+			<div style="display: inline; padding-left: 10px;">
+				<a href="" ng-click="editCategory = !editCategory" id="close-btn" >
+					<span class='glyphicon glyphicon-remove'>
+				</a>
+			</div>
+			</div>
+		</li>
+	</ul>
+</div>	

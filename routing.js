@@ -3,7 +3,7 @@
 newapp.config(
     function ($routeProvider) {
         $routeProvider
-            .when('/items/', {
+            .when('/', {
                 controller: 'itemList',
                 templateUrl: 'views/list/list.html'
             })

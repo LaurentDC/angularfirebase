@@ -1,12 +1,19 @@
 'use strict';
 
-var myCategories = [
-    {'id': 1, 'name': 'Cinéma'},
-    {'id': 2, 'name': 'Music'}
-];
+newapp.service('categoryProvider', ["$firebaseArray", 
+    function($firebaseArray) {
+        var ref = new Firebase('https://myfirstcollection.firebaseio.com/categories');
+        var myCategories = $firebaseArray(ref);
 
-newapp.service('categoryProvider', function() {
-    this.getCategories = function() {
-        return myCategories;
-    };
-});
+        this.getCategories = function() {
+            return myCategories;
+        }
+        this.create = function(category) {
+            category['catId'] = myCategories.length + 1;
+        	myCategories.$add(category);
+        }
+        this.remove = function(category) {
+        	myCategories.$remove(category);
+        }
+    }
+]);
